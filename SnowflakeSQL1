@@ -1,0 +1,19 @@
+use role sysadmin;
+create database my_db;
+show databases;
+create schema "my_schema" comment = "Schema with comment";
+
+select current_role(), current_database(), current_schema();
+
+use database my_db;
+
+drop table if exists my_table;
+create table my_table(
+id int autoincrement,
+num number,
+num10_1 number(10,1),
+decimal1_20_2 decimal(20,2),
+numeric1 numeric(30,3),
+int int,
+integer integer
+);

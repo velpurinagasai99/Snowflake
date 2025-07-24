@@ -38,3 +38,24 @@ select * from my_table;
 create table my_ctas as select * from MY_DB."my_schema".MY_TABLE;
 
 select * from my_ctas
+
+
+--snowsql -a wvvwtbb-aa91010 -u renukadevivelpuri                   --to connect to snowsql cli
+select t.$1, t.$2, t.$3, t.$4, t.$5, t.$6  from @first_stage (file_format => 'FIRST_FILE_FORMATTER') t;
+select * from my_ctas;
+copy into my_ctas from @first_stage;
+
+create table my_ctas_big_table as select * from snowflake_sample_data.tpch_sf100.orders;
+alter table my_ctas_big_table set data_retention_time_in_days=30;
+
+update my_ctas_big_table set o_orderstatus='o' where o_orderstatus='O';   --query id 01bdd7f2-3203-2d53-0006-7d76000263c6
+
+select count(*) from my_ctas_big_table before (statement => '01bdd7f2-3203-2d53-0006-7d76000263c6') where o_orderstatus='o';
+
+create table json_data (v variant);
+
+list @SNOWFLAKEAWS_STAGE;               --Create an aws stage name snowflakeaws_stage with appropriate access and s3 location
+
+copy into json_data from @snowflakeaws_stage file_format = (type=json);
+
+select * from json_data;

@@ -59,3 +59,36 @@ list @SNOWFLAKEAWS_STAGE;               --Create an aws stage name snowflakeaws_
 copy into json_data from @snowflakeaws_stage file_format = (type=json);
 
 select * from json_data;
+
+
+create view json_data_decomposed as 
+select 
+v:age::int as age,
+v:country::string as country,
+v:player_id::int as player_id,
+v:player_name::string as player_name,
+v:role::string as role,
+v:team_id::int as team_id
+from json_data;
+
+--creating external table
+create or replace external table json_data_decomposed2 (
+age int as (value:c1::int),
+...
+)
+with location = @snowflakeaws_stage
+auto_refresh = false
+file_format = (type = json);
+
+--sequence object is just a increment by an interval number generator.
+
+
+CREATE STORAGE INTEGRATION my_s3_integration
+  TYPE = EXTERNAL_STAGE
+  STORAGE_PROVIDER = 'S3'
+  ENABLED = TRUE
+  STORAGE_AWS_ROLE_ARN = 'arn:aws:iam::<your-account-id>:role/SnowflakeS3AccessRole'
+  STORAGE_ALLOWED_LOCATIONS = ('s3://your-bucket-name/');
+
+
+

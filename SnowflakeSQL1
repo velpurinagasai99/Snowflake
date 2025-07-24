@@ -17,3 +17,24 @@ numeric1 numeric(30,3),
 int int,
 integer integer
 );
+
+
+describe table my_text_table;
+
+drop table if exists my_ts_table;
+create table my_ts_table(
+today_date date default current_date(),
+now_time time default current_time(),
+now_ts timestamp default current_timestamp()
+);
+
+insert into my_ts_table(today_date,now_time,now_ts ) values (current_date,current_time,current_timestamp);
+insert into my_ts_table(now_time,now_ts ) values (current_time,current_timestamp);
+
+select * from my_table;
+
+--load data via web interface;
+
+create table my_ctas as select * from MY_DB."my_schema".MY_TABLE;
+
+select * from my_ctas
